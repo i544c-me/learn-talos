@@ -4,6 +4,19 @@ resource "sakuracloud_server" "talos_controlplane" {
   memory = 8
   disks  = [sakuracloud_disk.talos_controlplane.id]
 
+  #cdrom_id = sakuracloud_cdrom.talos.id
+
+  network_interface {
+    upstream = "shared"
+  }
+}
+
+resource "sakuracloud_server" "talos_worker" {
+  name   = "talos-worker"
+  core   = 4
+  memory = 8
+  disks  = [sakuracloud_disk.talos_worker.id]
+
   cdrom_id = sakuracloud_cdrom.talos.id
 
   network_interface {
@@ -13,6 +26,11 @@ resource "sakuracloud_server" "talos_controlplane" {
 
 resource "sakuracloud_disk" "talos_controlplane" {
   name = "talos-controlplane"
+  size = 40
+}
+
+resource "sakuracloud_disk" "talos_worker" {
+  name = "talos-worker"
   size = 40
 }
 
