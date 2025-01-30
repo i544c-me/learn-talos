@@ -1,0 +1,44 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: lets-encrypt
+spec:
+  acme:
+    email: vrc@i544c.me
+    server: https://acme-v02.api.letsencrypt.org/directory
+    #server: https://acme-staging-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: lets-encrypt-private-key
+    solvers:
+      - dns01:
+          cloudflare:
+            apiTokenSecretRef:
+              name: cloudflare
+              key: api-token
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: k8s-i544c-me
+  namespace: default
+spec:
+  secretName: k8s-i544c-me-secret
+  issuerRef:
+    name: lets-encrypt
+    kind: ClusterIssuer
+  commonName: k8s.i544c.me
+  dnsNames:
+  - k8s.i544c.me
+  - "*.k8s.i544c.me"
+
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: cloudflare
+  namespace: default
+spec:
+  encryptedData:
+    api-token: AgBYUKqHbuQsXraPmM5Ph+sgYIqrIsHN+YsDete9e00D3G6fw7R6A75CIFYHK2a4r85RRjwWyPC3PoMaP3lUcxU8GUTeIFO4nB2110NjfHbffFcPEpqDtN2o1F11Uv0cz4ms6Oq7RLtA+Sh0UgaduSbWNsS6pcVHr2NLwzP0RLPr3vrRDIFE47FdzDJaVsQi3KnHF3FTfLOn7Y8RtbUjVtfElQ/VzZsiPByBhlqeWiGmR7BXl6sMW9y7oSgqb+sqAW/gLViTGgFz4x/tScdmvRP9pJPhs3NV4x5eSElQ9hbePcwySN/S3WP7mGp5FsFHDo2R+4479u73R5nJl5ZAOnr9k7Vmio+Bhhv+10bXaz5HWVvENU4nMUpth/CbykwgYgL7XLCKS+Pkiw2m6ZEPYO/ILQDvkjsu9jXL0gYW4bf85FLMTa88O7QyZskimS1MTb3iyyUmvcYoYQxkVs9aqDQSFiEjTWpybKwTeXTET3aUqNvdCeJRyB49Thuc7DEtveL6Beh3wIQ4ZNtheJQ7XE3ixfC2lvLhSFhuCpHUiAb2px2cQSzZ2k5ZgOCT44pK1Z23Eh70CZAVN782VsfMzA6p/fb1KN+Lzv68U2lbI7TdL+O3IKJth6sAWSag2COn2153vSV0RvyYolMDyoeoMYGxumvEc6yMdV8S03S4ssNutD93YH2c15C4+a2ZtWk+6LCkN/mQUiF17LTH3HVwPRFbbHEYZigSjkOvOIIGC6/VHfOeeAYYoCsB
