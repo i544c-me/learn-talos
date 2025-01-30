@@ -23,7 +23,7 @@ metadata:
   name: k8s-i544c-me
   namespace: default
 spec:
-  secretName: k8s-i544c-me-secret
+  secretName: k8s-i544c-me
   issuerRef:
     name: lets-encrypt
     kind: ClusterIssuer

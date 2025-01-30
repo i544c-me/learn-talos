@@ -19,4 +19,4 @@ spec:
   tls:
     - hosts:
       - k8s.i544c.me
-      secretName: k8s-i544c-me-secret
+      secretName: k8s-i544c-me
