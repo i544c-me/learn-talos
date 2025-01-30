@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hello
+  namespace: default
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/i544c-me/learn-talos
+    path: argocd/hello
+    targetRevision: main
+  destination:
+    namespace: default
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
