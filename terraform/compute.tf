@@ -4,7 +4,7 @@ resource "sakuracloud_server" "talos_controlplane" {
   memory = 8
   disks  = [sakuracloud_disk.talos_controlplane.id]
 
-  #cdrom_id = sakuracloud_cdrom.talos.id
+  cdrom_id = sakuracloud_cdrom.talos.id
 
   network_interface {
     upstream = "shared"
