@@ -1,0 +1,59 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rook-ceph
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-10"
+spec:
+  project: default
+  source:
+    chart: rook-ceph
+    repoURL: https://charts.rook.io/release
+    # NOTE: https://artifacthub.io/packages/helm/rook/rook-ceph
+    targetRevision: 1.16.2
+  destination:
+    namespace: rook-ceph
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rook-ceph-cluster
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-10"
+spec:
+  project: default
+  source:
+    chart: rook-ceph-cluster
+    repoURL: https://charts.rook.io/release
+    # NOTE: https://artifacthub.io/packages/helm/rook/rook-ceph-cluster
+    targetRevision: 1.16.2
+    helm:
+      valuesObject:
+        operatorNamespace: rook-ceph
+  destination:
+    namespace: rook-ceph
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rook-ceph
+  labels:
+    name: rook-ceph
+    # NOTE: https://www.talos.dev/v1.9/kubernetes-guides/configuration/ceph-with-rook/#installation
+    pod-security.kubernetes.io/enforce: privileged
+  annotations:
+    argocd.argoproj.io/sync-wave: "-10"
