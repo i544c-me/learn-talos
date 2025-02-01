@@ -2,13 +2,13 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: hello
-  namespace: default
+  namespace: argocd
 spec:
   project: default
   source:
-    repoURL: https://github.com/i544c-me/learn-talos
+    repoURL: https://github.com/i544c-me/learn-talos.git
     path: argocd/hello
-    targetRevision: main
+    targetRevision: staging
   destination:
     namespace: default
     server: https://kubernetes.default.svc

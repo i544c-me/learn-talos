@@ -16,3 +16,6 @@ spec:
                 name: hello-nginx
                 port:
                   number: 80
+  tls:
+    - hosts:
+      - k8s.i544c.me
