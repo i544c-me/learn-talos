@@ -42,8 +42,10 @@ metadata:
   namespace: metallb-system
 spec:
   addresses:
-  - 153.120.17.236/32
-  - 133.125.82.148/32
+  - 153.120.17.236/32 # control
+  - 133.125.82.148/32 # worker-0
+  - 133.242.70.96/32  # worker-1
+  - 153.120.25.134/32 # worker-2
   autoAssign: true
 
 ---

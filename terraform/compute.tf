@@ -1,3 +1,7 @@
+locals {
+  worker_nodes = 3
+}
+
 resource "sakuracloud_server" "talos_controlplane" {
   name   = "talos-controlplane"
   core   = 4
@@ -11,11 +15,18 @@ resource "sakuracloud_server" "talos_controlplane" {
   }
 }
 
+resource "sakuracloud_disk" "talos_controlplane" {
+  name = "talos-controlplane"
+  size = 40
+}
+
 resource "sakuracloud_server" "talos_worker" {
-  name   = "talos-worker"
+  count = local.worker_nodes
+
+  name   = "talos-worker-${count.index}"
   core   = 4
   memory = 8
-  disks  = [sakuracloud_disk.talos_worker.id]
+  disks  = [sakuracloud_disk.talos_worker[count.index].id]
 
   cdrom_id = sakuracloud_cdrom.talos.id
 
@@ -24,13 +35,10 @@ resource "sakuracloud_server" "talos_worker" {
   }
 }
 
-resource "sakuracloud_disk" "talos_controlplane" {
-  name = "talos-controlplane"
-  size = 40
-}
-
 resource "sakuracloud_disk" "talos_worker" {
-  name = "talos-worker"
+  count = local.worker_nodes
+
+  name = "talos-worker-${count.index}"
   size = 40
 }
 
