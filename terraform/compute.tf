@@ -1,22 +1,34 @@
 locals {
-  worker_nodes = 3
+  control_nodes = 1
+  worker_nodes  = 3
 }
 
-resource "sakuracloud_server" "talos_controlplane" {
-  name   = "talos-controlplane"
+resource "sakuracloud_server" "talos_control" {
+  count = local.control_nodes
+
+  name   = "talos-control-${count.index}"
   core   = 4
   memory = 8
-  disks  = [sakuracloud_disk.talos_controlplane.id]
+  disks  = [sakuracloud_disk.talos_control[count.index].id]
 
   cdrom_id = sakuracloud_cdrom.talos.id
 
   network_interface {
-    upstream = "shared"
+    upstream = data.sakuracloud_internet.main.switch_id
+  }
+
+  disk_edit_parameter {
+    hostname   = "talos-controlplane-${count.index}"
+    ip_address = data.sakuracloud_internet.main.ip_addresses[count.index]
+    gateway    = data.sakuracloud_internet.main.gateway
+    netmask    = data.sakuracloud_internet.main.netmask
   }
 }
 
-resource "sakuracloud_disk" "talos_controlplane" {
-  name = "talos-controlplane"
+resource "sakuracloud_disk" "talos_control" {
+  count = local.control_nodes
+
+  name = "talos-controlplane-${count.index}"
   size = 40
 }
 
@@ -31,7 +43,14 @@ resource "sakuracloud_server" "talos_worker" {
   cdrom_id = sakuracloud_cdrom.talos.id
 
   network_interface {
-    upstream = "shared"
+    upstream = data.sakuracloud_internet.main.switch_id
+  }
+
+  disk_edit_parameter {
+    hostname   = "talos-worker-${count.index}"
+    ip_address = data.sakuracloud_internet.main.ip_addresses[count.index + 3]
+    gateway    = data.sakuracloud_internet.main.gateway
+    netmask    = data.sakuracloud_internet.main.netmask
   }
 }
 
