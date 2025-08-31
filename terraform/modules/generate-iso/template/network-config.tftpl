@@ -1,0 +1,11 @@
+version: 1
+config:
+  - type: physical
+    name: eth0
+    subnets:
+      - type: static
+        address: ${ip_address}
+        netmask: 255.255.255.240
+        gateway: ${gateway}
+        nameservers:
+          addresses: [133.242.0.3, 133.242.0.4]
